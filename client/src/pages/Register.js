@@ -1,11 +1,12 @@
-import { useState } from "react";
+import React, { useState } from "react";
+import { BrowserRouter, Route } from "react-router-dom";
 
-function App() {
+const App = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  async function register(event) {
+  async function registerUser(event) {
     event.preventDefault();
     const response = await fetch("http://localhost:8080/api/register", {
       method: "POST",
@@ -25,34 +26,34 @@ function App() {
   }
 
   return (
-    <div className="App">
+    <div>
       <h1>Register</h1>
-      <form onSubmit={register}>
+      <form onSubmit={registerUser}>
         <input
           value={name}
           onChange={(e) => setName(e.target.value)}
           type="text"
           placeholder="Name"
-        ></input>
+        />
         <br />
         <input
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           type="email"
           placeholder="Email"
-        ></input>
+        />
         <br />
         <input
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           type="password"
           placeholder="Password"
-        ></input>
+        />
         <br />
-        <input type="submit" value="Register"></input>
+        <input type="submit" value="Register" />
       </form>
     </div>
   );
-}
+};
 
 export default App;

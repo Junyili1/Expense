@@ -1,11 +1,10 @@
-import { useState } from "react";
+import React, { useState } from "react";
 
-function App() {
-  const [name, setName] = useState("");
+const App = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  async function login(event) {
+  async function loginUser(event) {
     event.preventDefault();
     const response = await fetch("http://localhost:8080/api/login", {
       method: "POST",
@@ -13,7 +12,6 @@ function App() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        name,
         email,
         password,
       }),
@@ -21,31 +19,37 @@ function App() {
 
     const data = await response.json();
 
+    if (data.user) {
+      alert("Login successful");
+      window.location.href = "/dashboard";
+    } else {
+      alert("Wrong credentials");
+    }
     console.log(data);
   }
 
   return (
-    <div className="App">
+    <div>
       <h1>Login</h1>
-      <form onSubmit={login}>
+      <form onSubmit={loginUser}>
         <input
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          type="email"
+          type="text"
           placeholder="Email"
-        ></input>
+        />
         <br />
         <input
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           type="password"
           placeholder="Password"
-        ></input>
+        />
         <br />
-        <input type="submit" value="Login"></input>
+        <input type="submit" value="Login" />
       </form>
     </div>
   );
-}
+};
 
 export default App;

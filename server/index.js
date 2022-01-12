@@ -2,27 +2,28 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const mongoose = require("mongoose");
+const jwt = require("jsonwebtoken");
 const User = require("./models/user.model");
 
 app.use(cors());
 app.use(express.json());
 
-mongoose.connect("mongodb://127.0.0.1:27017/expense");
-
 const PORT = 8080;
 
+mongoose.connect("mongodb://127.0.0.1:27017/expense");
+
 app.post("/api/register", async (req, res) => {
-  console.log(req.body);
   try {
-    const user = await User.create({
+    await User.create({
       name: req.body.name,
       email: req.body.email,
       password: req.body.password,
     });
+
     res.json({ status: "ok" });
   } catch (err) {
     console.log(err);
-    res.json({ status: "error", error: "Duplicate Email" });
+    res.json({ status: "error", error: `Duplicate Email` });
   }
 });
 
@@ -33,12 +34,20 @@ app.post("/api/login", async (req, res) => {
   });
 
   if (user) {
-    return res.json({ status: "ok", user: true });
+    const token = jwt.sign(
+      {
+        name: user.name,
+        email: user.email,
+      },
+      "secret123"
+    );
+
+    return res.json({ status: "ok", user: token });
   } else {
     return res.json({ status: "error", user: false });
   }
 });
 
 app.listen(PORT, () => {
-  console.log(`Listening on port: ${PORT}`);
+  console.log(`Server started on port ${PORT}`);
 });
