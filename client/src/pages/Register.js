@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { BrowserRouter, Route } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 const App = () => {
+  const history = useHistory();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -22,6 +23,9 @@ const App = () => {
 
     const data = await response.json();
 
+    if (data.status === "ok") {
+      history.push("/login");
+    }
     console.log(data);
   }
 
